@@ -13,8 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.optic.quizdosi013214.URL.HttpManager;
-import com.optic.quizdosi013214.models.User;
-import com.optic.quizdosi013214.parsers.JsonUsers;
+import com.optic.quizdosi013214.models.Photo;
+import com.optic.quizdosi013214.parsers.JsonPhotos;
 
 import org.json.JSONException;
 
@@ -22,25 +22,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class PhotosActivity extends AppCompatActivity {
 
     private ProgressBar mProgressBar;
     private TextView mTextViewData;
 
-    private List<User> userList = new ArrayList<>();
+    private List<Photo> photoList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_photos);
 
         mProgressBar = (ProgressBar) findViewById(R.id.progressBar);
         mTextViewData = (TextView) findViewById(R.id.textViewData);
 
 
         if(isOnline()) {
-            TaskUsers taskUsers = new TaskUsers();
-            taskUsers.execute("https://jsonplaceholder.typicode.com/users");
+            TaskPhotos taskPhotos = new TaskPhotos();
+            taskPhotos.execute("https://jsonplaceholder.typicode.com/photos");
 
         }
         else {
@@ -49,14 +49,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-    /*
-     * ONCLICK IR A PHOTOS
-     */
-    public void OnClickGoToPhoto(View view) {
-        Intent photoIntent = new Intent(MainActivity.this, PhotosActivity.class);
-        startActivity(photoIntent);
-    }
 
     /*
      * METODO QUE PERMITE VALIDAR EL ESTADO DE LA RED
@@ -80,15 +72,15 @@ public class MainActivity extends AppCompatActivity {
      */
     public void processData() {
         // mTextViewData.append(data + "\n");
-        Toast.makeText(this, String.valueOf(userList.size()), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, String.valueOf(photoList.size()), Toast.LENGTH_SHORT).show();
 
-        for(User user  : userList) {
-            mTextViewData.append(user + "\n\n");
+        for(Photo photo  : photoList) {
+            mTextViewData.append(photo + "\n\n");
         }
     }
 
 
-    public class TaskUsers extends AsyncTask<String, String, String> {
+    public class TaskPhotos extends AsyncTask<String, String, String> {
 
         @Override
         protected void onPreExecute() {
@@ -119,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             try {
-                userList = JsonUsers.getDataJson(s);
+                photoList = JsonPhotos.getDataJson(s);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -127,5 +119,4 @@ public class MainActivity extends AppCompatActivity {
             mProgressBar.setVisibility(View.GONE);
         }
     }
-
 }
